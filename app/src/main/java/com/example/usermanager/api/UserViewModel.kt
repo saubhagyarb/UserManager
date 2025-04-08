@@ -1,5 +1,6 @@
 package com.example.usermanager.api
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -51,7 +52,9 @@ class UserViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _registerResult.value = Result.success(response.body()!!)
                 } else {
-                    _registerResult.value = Result.failure(Exception("Registration failed: ${response.code()}"))
+                    val errorBody = response.errorBody()?.string() ?: "Unknown error"
+                    _registerResult.value = Result.failure(Exception("Registration failed: ${response.code()} - $errorBody"))
+                    Log.e(response.code().toString(), "register: $errorBody", )
                 }
             } catch (e: Exception) {
                 _registerResult.value = Result.failure(e)

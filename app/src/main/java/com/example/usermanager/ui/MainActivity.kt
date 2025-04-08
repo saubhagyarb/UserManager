@@ -32,6 +32,6 @@ class MainActivity : AppCompatActivity() {
                 startActivity(Intent(this, AuthActivity::class.java))
             }
             finish()
-        }, 2000)
+        }, 100)
     }
 }

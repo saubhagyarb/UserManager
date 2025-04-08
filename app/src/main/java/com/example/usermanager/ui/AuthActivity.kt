@@ -72,9 +72,7 @@ class AuthActivity : AppCompatActivity() {
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                 sessionManager.saveAuthToken(loginResponse.token)
                 sessionManager.setLoggedIn(true)
-
-                // For demo purposes, use a default user ID since login API doesn't return one
-                sessionManager.saveUserId(4) // Using ID 4 because it's in the example
+                sessionManager.saveUserId(0)
 
                 navigateToDashboard()
             }.onFailure { exception ->
