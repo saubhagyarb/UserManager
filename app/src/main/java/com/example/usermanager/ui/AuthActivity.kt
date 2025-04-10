@@ -1,8 +1,9 @@
-// AuthActivity.kt
 package com.example.usermanager.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -55,11 +56,10 @@ class AuthActivity : AppCompatActivity() {
             val email = registerEmailEt.text.toString().trim()
             val password = registerPasswordEt.text.toString().trim()
 
-            if (email.isEmpty() || password.isEmpty()) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(email).matches() || password.isEmpty()) {
                 Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-
             viewModel.register(email, password)
         }
 
@@ -71,10 +71,11 @@ class AuthActivity : AppCompatActivity() {
             result.onSuccess { loginResponse ->
                 Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                 sessionManager.saveAuthToken(loginResponse.token)
+                Log.d("AuthActivity", "observeViewModel: loginResponse.token = ${loginResponse.token}")
                 sessionManager.setLoggedIn(true)
-                sessionManager.saveUserId(0)
 
                 navigateToDashboard()
+                Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
             }.onFailure { exception ->
                 Toast.makeText(this, "Login failed: ${exception.message}", Toast.LENGTH_SHORT).show()
             }

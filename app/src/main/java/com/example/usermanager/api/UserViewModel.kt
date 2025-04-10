@@ -5,15 +5,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.usermanager.data.LoginRequest
-import com.example.usermanager.data.LoginResponse
+import com.example.usermanager.data.LoginData.LoginRequest
+import com.example.usermanager.data.LoginData.LoginResponse
 import com.example.usermanager.data.RegisterResponse
-import com.example.usermanager.data.UpdateUserRequest
-import com.example.usermanager.data.UpdateUserResponse
-import com.example.usermanager.data.User
+import com.example.usermanager.data.UpdateData.UpdateUserRequest
+import com.example.usermanager.data.UpdateData.UpdateUserResponse
+import com.example.usermanager.data.UserData.User
 import kotlinx.coroutines.launch
 
-// UserViewModel.kt
 class UserViewModel : ViewModel() {
     private val _loginResult = MutableLiveData<Result<LoginResponse>>()
     val loginResult: LiveData<Result<LoginResponse>> get() = _loginResult
@@ -36,8 +35,10 @@ class UserViewModel : ViewModel() {
                 val response = RetrofitObject.api.loginUser(LoginRequest(email, password))
                 if (response.isSuccessful) {
                     _loginResult.value = Result.success(response.body()!!)
+                    Log.d("viewmodel", "login: ${response.body()!!.token}}" )
                 } else {
                     _loginResult.value = Result.failure(Exception("Login failed: ${response.code()}"))
+                    Log.e("viewmodel", "login: ${response.code()}" )
                 }
             } catch (e: Exception) {
                 _loginResult.value = Result.failure(e)
@@ -54,7 +55,7 @@ class UserViewModel : ViewModel() {
                 } else {
                     val errorBody = response.errorBody()?.string() ?: "Unknown error"
                     _registerResult.value = Result.failure(Exception("Registration failed: ${response.code()} - $errorBody"))
-                    Log.e(response.code().toString(), "register: $errorBody", )
+                    Log.e(response.code().toString(), "register: $errorBody")
                 }
             } catch (e: Exception) {
                 _registerResult.value = Result.failure(e)

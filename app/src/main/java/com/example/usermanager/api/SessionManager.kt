@@ -1,4 +1,3 @@
-// SessionManager.kt
 package com.example.usermanager.api
 
 import android.content.Context
@@ -7,6 +6,7 @@ import android.content.SharedPreferences
 class SessionManager(context: Context) {
     private val sharedPreferences: SharedPreferences =
         context.getSharedPreferences("UserManagerPrefs", Context.MODE_PRIVATE)
+
     private val editor = sharedPreferences.edit()
 
     companion object {
@@ -28,10 +28,6 @@ class SessionManager(context: Context) {
     fun setLoggedIn(isLoggedIn: Boolean) {
         editor.putBoolean(KEY_IS_LOGGED_IN, isLoggedIn)
         editor.apply()
-    }
-
-    fun getToken(): String? {
-        return sharedPreferences.getString(KEY_TOKEN, null)
     }
 
     fun getUserId(): Int {
